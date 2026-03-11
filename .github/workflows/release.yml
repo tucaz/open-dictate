@@ -1,0 +1,101 @@
+# GitHub Actions Workflow for open-dictate Windows
+# 
+# This workflow triggers on push to the 'release' branch.
+# It reads the version from version.py, builds the release, creates a git tag,
+# and publishes a GitHub Release with the built assets.
+#
+# Usage:
+#   1. Edit open_dictate/version.py to set your desired version
+#   2. Commit and push to main
+#   3. Merge main into release branch and push
+#   4. This workflow runs automatically
+
+name: Release
+
+on:
+  push:
+    branches:
+      - release
+
+permissions:
+  contents: write  # Required to create releases and tags
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Need full history for tags
+      
+      # Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      
+      # Read version from open_dictate/version.py
+      - name: Read version
+        id: version
+        shell: pwsh
+        run: |
+          $version = & .\scripts\read-version.ps1
+          Write-Output "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Building version: $version"
+      
+      # Check if tag already exists
+      - name: Check for existing tag
+        id: check_tag
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          $tag = "v$version"
+          
+          # Check if tag exists
+          $existingTag = git tag -l $tag
+          if ($existingTag) {
+            Write-Host "Tag $tag already exists. Skipping release."
+            Write-Output "exists=true" >> $env:GITHUB_OUTPUT
+          } else {
+            Write-Host "Tag $tag does not exist. Proceeding with release."
+            Write-Output "exists=false" >> $env:GITHUB_OUTPUT
+          }
+      
+      # Install dependencies
+      - name: Install dependencies
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          pip install -r requirements.txt
+          pip install pyinstaller
+      
+      # Build release
+      - name: Build release
+        if: steps.check_tag.outputs.exists == 'false'
+        shell: pwsh
+        run: |
+          & .\scripts\build-release.ps1 -Version "${{ steps.version.outputs.version }}"
+      
+      # Create GitHub Release (also creates the tag)
+      - name: Create Release
+        if: steps.check_tag.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          files: |
+            release/open-dictate-windows-v${{ steps.version.outputs.version }}.zip
+          generate_release_notes: true
+          # This creates both the tag and release in one API call
+          # No need to push tag separately
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Summary
+      - name: Summary
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          echo "✅ Release v${{ steps.version.outputs.version }} created successfully!"
+          echo "📦 Asset: open-dictate-windows-v${{ steps.version.outputs.version }}.zip"

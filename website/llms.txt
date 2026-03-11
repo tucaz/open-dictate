@@ -1,0 +1,72 @@
+# open-dictate
+
+> Free, open-source voice dictation for Windows. Powered by Whisper, runs locally, and is inspired by the original open-wispr for macOS.
+
+open-dictate is a lightweight Windows app that provides push-to-talk voice dictation. Hold a hotkey, speak, release, and transcribed text appears at your cursor in any app. It uses Whisper locally, so the intended workflow keeps audio and text on-device.
+
+## Key Facts
+
+- **Price**: Free and open source
+- **Platform**: Windows 10 and Windows 11
+- **Privacy**: Local transcription on your machine. Audio recordings are only kept if `maxRecordings` is configured above `0`
+- **Install (script)**: `powershell -ExecutionPolicy Bypass -Command "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/tucaz/open-dictate/main/scripts/install.ps1'))"`
+- **Install (portable)**: Download `open-dictate-windows-vX.X.X.zip`, extract it, then run `open-dictate.exe start`
+- **Default start command**: `open-dictate start`
+- **Source**: https://github.com/tucaz/open-dictate
+- **Original macOS project**: https://open-wispr.com/
+
+## How It Works
+
+1. Hold the configured hotkey (Right Ctrl by default)
+2. Speak naturally
+3. Release and the text is inserted at your active cursor
+
+## Features
+
+- Works across apps wherever the active text cursor is available
+- Configurable hotkey, language, model size, spoken punctuation, and recording retention
+- Multiple Whisper model sizes: `tiny.en`, `tiny`, `base.en`, `base`, `small.en`, `small`, `medium.en`, `medium`, `large`
+- Multilingual support with Whisper language codes such as `pt`, `es`, `fr`, `de`, and `ja`
+- Portable ZIP option or one-command PowerShell installer
+- Windows rewrite of the original Swift/macOS project
+
+## Configuration
+
+Config file location: `%APPDATA%\open-dictate\config.json`
+
+Default configuration:
+
+```json
+{
+  "hotkey": { "keyCode": 163, "modifiers": [] },
+  "modelSize": "base.en",
+  "language": "en",
+  "spokenPunctuation": false,
+  "maxRecordings": 0
+}
+```
+
+For non-English dictation, switch from `base.en` to a multilingual model such as `base` or `small`, then set the matching language code in the config.
+
+Example:
+
+```powershell
+open-dictate download-model base
+open-dictate set-model base
+```
+
+Then update config:
+
+```json
+{
+  "modelSize": "base",
+  "language": "pt"
+}
+```
+
+## System Requirements
+
+- Windows 10 or Windows 11
+- Around 150 MB disk space for the default `base.en` model
+- Rough Whisper memory guidance: about 1 GB for `tiny`/`base`, 2 GB for `small`, 5 GB for `medium`, and 10 GB for `large`
+- `base.en` or `base` is the sensible default for most machines; `small` is the next step up if you want better accuracy

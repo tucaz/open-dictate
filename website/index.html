@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Open-Dictate for Windows | Free Local Voice Dictation</title>
+  <meta
+    name="description"
+    content="Local, private voice dictation for Windows. Hold a key, speak, release, and your words appear at the cursor."
+  >
+  <meta property="og:title" content="Open-Dictate for Windows">
+  <meta
+    property="og:description"
+    content="Free, local voice dictation for Windows. Hold a key, speak, release, and your words appear at the cursor."
+  >
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://open-dictate.com/logo.png">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Open-Dictate for Windows">
+  <meta
+    name="twitter:description"
+    content="Free, local voice dictation for Windows. Hold a key, speak, release, and your words appear at the cursor."
+  >
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="#top">
+        <img class="brand-mark" src="logo.svg" alt="Open-Dictate logo">
+        <span class="brand-text">Open-Dictate</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#install">Install</a>
+        <a href="#config">Config</a>
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/tucaz/open-dictate" target="_blank" rel="noreferrer">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="signal-strip" aria-label="Why it exists">
+        <p>
+          This project is a Windows rewrite of the original macOS app by human37.
+          Want the Mac version instead?
+          <a href="https://open-wispr.com/" target="_blank" rel="noreferrer">Visit open-wispr.com</a>.
+        </p>
+      </section>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="hero-body">
+            <div class="hero-main">
+              <h1>Private voice dictation for Windows, with no cloud hop in the middle.</h1>
+              <p class="hero-text">
+                Hold a key, speak, release. Open-Dictate runs locally, transcribes on-device with Whisper,
+                and pastes text straight into the app you are already using.
+              </p>
+
+              <div class="cta-row">
+                <a
+                  class="button button-primary"
+                  id="download-link"
+                  href="https://github.com/tucaz/open-dictate/releases"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Download for Windows
+                </a>
+                <a class="button button-secondary" href="#install">Or use portable mode</a>
+              </div>
+
+              <p class="release-note" id="release-note">
+                Latest release link loads automatically. Fallback: GitHub Releases.
+              </p>
+            </div>
+
+            <aside class="hero-visual" aria-label="Workflow preview">
+              <div class="visual-orb"></div>
+              <div class="visual-card visual-card-top">
+                <span class="visual-label">Workflow</span>
+                <strong>Hold → Speak → Release</strong>
+                <p>Built for quick capture anywhere your cursor is active.</p>
+              </div>
+              <div class="visual-card visual-card-mid">
+                <span class="visual-label">Privacy</span>
+                <strong>On-device transcription</strong>
+                <p>No required cloud processing in the normal dictation flow.</p>
+              </div>
+              <div class="visual-card visual-card-bottom">
+                <span class="visual-label">Setup</span>
+                <strong>One script does it all</strong>
+                <p>Run a single PowerShell command and let the setup handle the rest.</p>
+              </div>
+            </aside>
+          </div>
+
+        </div>
+
+        <aside class="hero-panel" id="quick-install" aria-label="Quick install">
+          <div class="panel-top">
+            <div>
+              <p class="panel-kicker">Install in PowerShell</p>
+              <p class="panel-title">One command. Local setup. Done.</p>
+            </div>
+            <button class="copy-button" id="copy-install" type="button">Copy command</button>
+          </div>
+
+          <div class="terminal-card">
+            <div class="terminal-bar">
+              <span></span>
+              <span></span>
+              <span></span>
+              <p>PowerShell</p>
+            </div>
+            <pre class="install-command"><code id="install-command">powershell -ExecutionPolicy Bypass -Command "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/tucaz/open-dictate/main/scripts/install.ps1'))"</code></pre>
+          </div>
+
+          <p class="panel-run-label">After installation, start it with:</p>
+          <pre class="install-run install-run-hero"><code>open-dictate start</code></pre>
+        </aside>
+      </section>
+
+      <section class="section section-accent" id="install">
+        <div class="section-heading">
+          <p class="eyebrow">Install</p>
+          <h2>Portable mode.</h2>
+        </div>
+
+        <div class="install-grid">
+          <article class="install-card">
+            <h3>Portable: download and unzip</h3>
+            <p>If you do not want to run the install script, download the ZIP release and extract it anywhere.</p>
+            <ol>
+              <li>Download <code>open-dictate-windows-vX.X.X.zip</code></li>
+              <li>Extract it to any folder or removable drive</li>
+              <li>Run <code>open-dictate.exe start</code></li>
+            </ol>
+            <p class="install-foot">Useful for testing, temporary setups, or portable use.</p>
+          </article>
+        </div>
+
+        <div class="detail-grid">
+          <article class="detail-card">
+            <h3>First run</h3>
+            <p>
+              The default Whisper model downloads automatically on first use and is stored in
+              <code>%APPDATA%\open-dictate\models\</code>.
+            </p>
+          </article>
+          <article class="detail-card">
+            <h3>Recommended trigger choices</h3>
+            <p>
+              Right Ctrl is the default. Avoid Alt combinations, since they can activate menu bars in many Windows apps.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="features">
+        <div class="section-heading">
+          <p class="eyebrow">How it works</p>
+          <h2>Built for quick capture, not a giant desktop UI.</h2>
+        </div>
+
+        <div class="steps-grid">
+          <article class="step-card">
+            <span class="step-index">01</span>
+            <h3>Hold</h3>
+            <p>Press and hold Right Ctrl, or map your own hotkey if you want a different trigger.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-index">02</span>
+            <h3>Speak</h3>
+            <p>Audio stays on your machine while Whisper processes the recording locally.</p>
+          </article>
+          <article class="step-card">
+            <span class="step-index">03</span>
+            <h3>Release</h3>
+            <p>Text appears at the active cursor so you can dictate into chat, docs, email, terminals, and forms.</p>
+          </article>
+        </div>
+
+        <div class="subsection-heading">
+          <p class="eyebrow">... and more</p>
+          <h3>Additional features and behavior.</h3>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card">
+            <h3>Private by default</h3>
+            <p>No audio or text needs to leave your machine. Local models live under your Windows profile.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Works across apps</h3>
+            <p>The flow is designed for wherever your cursor is, not for a single editor or note-taking surface.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Configurable hotkeys</h3>
+            <p>Use Right Ctrl out of the box or change the trigger to whatever feels more comfortable for your setup.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Whisper model choice</h3>
+            <p>Start with <code>base.en</code> or switch model size and language based on speed and accuracy needs.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Recovery tools</h3>
+            <p>Audio recordings are only kept if you configure <code>maxRecordings</code> to be greater than <code>0</code>.</p>
+          </article>
+          <article class="feature-card">
+            <h3>Open source port</h3>
+            <p>The Windows implementation is a Python rewrite inspired by the original Swift app on macOS.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="config">
+        <div class="section-heading">
+          <p class="eyebrow">Configuration</p>
+          <h2>Simple JSON, no control panel maze.</h2>
+        </div>
+
+        <div class="config-overview">
+          <article class="config-summary">
+            <p class="config-path">Edit <code>%APPDATA%\open-dictate\config.json</code></p>
+            <h3>Start with the defaults, then change only what you need.</h3>
+            <p>
+              The app keeps configuration in one plain JSON file under your Windows profile. No control panel,
+              no account, no hidden sync layer.
+            </p>
+            <div class="config-highlights">
+              <span>Right Ctrl by default</span>
+              <span><code>base.en</code>&nbsp;for English</span>
+              <span>Privacy mode on</span>
+              <span>Language switchable</span>
+            </div>
+          </article>
+
+          <article class="config-card">
+            <p class="config-path">Default config example</p>
+            <pre class="config-code"><code>{
+  "hotkey": { "keyCode": 163, "modifiers": [] },
+  "modelSize": "base.en",
+  "language": "en",
+  "spokenPunctuation": false,
+  "maxRecordings": 0
+}</code></pre>
+          </article>
+        </div>
+
+        <div class="config-points">
+          <article class="detail-card">
+            <h3><code>modelSize</code></h3>
+            <p>Default is <code>base.en</code>, which is English-only. Available model values are <code>tiny.en</code>, <code>tiny</code>, <code>base.en</code>, <code>base</code>, <code>small.en</code>, <code>small</code>, <code>medium.en</code>, <code>medium</code>, and <code>large</code>.</p>
+          </article>
+          <article class="detail-card">
+            <h3><code>language</code></h3>
+            <p>Default is <code>en</code>. Set it to a Whisper language code such as <code>pt</code>, <code>es</code>, <code>fr</code>, <code>de</code>, or <code>ja</code>.</p>
+          </article>
+          <article class="detail-card">
+            <h3><code>spokenPunctuation</code></h3>
+            <p>Turn it on if you want phrases like "comma" and "period" converted into punctuation marks.</p>
+          </article>
+          <article class="detail-card">
+            <h3><code>maxRecordings</code></h3>
+            <p>Keep it at <code>0</code> for privacy-first mode, or raise it to preserve recordings for re-transcription.</p>
+          </article>
+        </div>
+
+        <article class="detail-card language-guide">
+          <h3>Using other languages</h3>
+          <p>
+            The default installer grabs <code>base.en</code>, which is English-only. For any other language,
+            switch to a multilingual model such as <code>base</code> or <code>small</code>, then set the matching
+            Whisper language code in the config.
+          </p>
+          <div class="language-guide-grid">
+            <div class="language-guide-copy">
+              <p>Typical examples:</p>
+              <ul class="language-list">
+                <li><code>pt</code> for Portuguese</li>
+                <li><code>es</code> for Spanish</li>
+                <li><code>fr</code> for French</li>
+                <li><code>de</code> for German</li>
+                <li><code>ja</code> for Japanese</li>
+              </ul>
+              <p>
+                Example flow: if you want Brazilian Portuguese, download <code>base</code> or <code>small</code>,
+                set that as the model, then use <code>"language": "pt"</code>.
+              </p>
+            </div>
+            <pre class="config-code config-code-compact"><code>open-dictate download-model base
+open-dictate set-model base
+
+# then edit %APPDATA%\open-dictate\config.json
+{
+  "hotkey": { "keyCode": 163, "modifiers": [] },
+  "modelSize": "base",
+  "language": "pt"
+}</code></pre>
+          </div>
+          <p>
+            For better recognition quality, use <code>small</code> instead of <code>base</code>. The pattern is the same for other languages:
+            keep the model multilingual and swap the language code.
+          </p>
+        </article>
+      </section>
+
+      <section class="section" id="faq">
+        <div class="section-heading">
+          <p class="eyebrow">FAQ</p>
+          <h2>What people usually need to know before trying it.</h2>
+        </div>
+
+        <div class="faq-list">
+          <article class="faq-item">
+            <h3>Is it free?</h3>
+            <p>Yes. It is free, open source, and a Windows port of the original <a href="https://open-wispr.com/" target="_blank" rel="noreferrer">open-wispr</a> app for macOS.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Does my audio leave the machine?</h3>
+            <p>No. The intended workflow is local transcription using Whisper on your own machine.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Which Windows versions are supported?</h3>
+            <p>Windows 10 and Windows 11.</p>
+          </article>
+          <article class="faq-item">
+            <h3>What hardware should I start with?</h3>
+            <p>
+              Start with the default <code>base.en</code> model for English, or <code>base</code> for multilingual use.
+              OpenAI lists approximate Whisper memory needs at about 1 GB for <code>tiny</code>/<code>base</code>,
+              2 GB for <code>small</code>, 5 GB for <code>medium</code>, and 10 GB for <code>large</code>.
+              In practice, that means <code>base.en</code> or <code>base</code> is the sensible choice for most Windows laptops and desktops,
+              <code>small</code> is for stronger machines that want better accuracy, and <code>medium</code>/<code>large</code> are usually overkill for quick dictation.
+            </p>
+          </article>
+          <article class="faq-item">
+            <h3>Will it work in the app I already use?</h3>
+            <p>That is the goal. Dictation is meant to land wherever your active text cursor currently is.</p>
+          </article>
+          <article class="faq-item">
+            <h3>Can I change the hotkey or language?</h3>
+            <p>Yes. Use practical hotkeys like Right Ctrl, Insert, or Ctrl+Space, and edit <code>%APPDATA%\open-dictate\config.json</code> for language changes.</p>
+          </article>
+          <article class="faq-item">
+            <h3>How do I use Brazilian Portuguese?</h3>
+            <p>See the Configuration section above. The same multilingual setup applies there, with Brazilian Portuguese as one example.</p>
+          </article>
+          <article class="faq-item">
+            <h3>I need the macOS version instead.</h3>
+            <p>
+              Use the original project:
+              <a href="https://open-wispr.com/" target="_blank" rel="noreferrer">open-wispr.com</a>
+              or the
+              <a href="https://github.com/human37/open-wispr" target="_blank" rel="noreferrer">human37/open-wispr</a>
+              repository.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Open-Dictate for Windows is the Windows port maintained in this repository.</p>
+      <p>
+        Source:
+        <a href="https://github.com/tucaz/open-dictate" target="_blank" rel="noreferrer">tucaz/open-dictate</a>.
+        Original macOS project:
+        <a href="https://open-wispr.com/" target="_blank" rel="noreferrer">open-wispr.com</a>
+        by
+        <a href="https://github.com/human37" target="_blank" rel="noreferrer">human37</a>.
+      </p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
