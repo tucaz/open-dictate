@@ -138,17 +138,31 @@ if ($IsLocalMode) {
     }
     Expand-Archive -Path $TempZip -DestinationPath $TempDir -Force
     
-    # Copy files
-    $ExtractedDir = Get-ChildItem $TempDir -Directory | Select-Object -First 1
-    if (-not $ExtractedDir) {
-        $ExtractedDir = Get-Item $TempDir
+    # Support both zip layouts:
+    # 1. Files extracted directly into $TempDir
+    # 2. Files extracted into a single top-level folder under $TempDir
+    $ExtractedRoot = $TempDir
+    if (-not (Test-Path (Join-Path $ExtractedRoot "open-dictate.exe"))) {
+        $NestedRoot = Get-ChildItem $TempDir -Directory |
+            Where-Object { Test-Path (Join-Path $_.FullName "open-dictate.exe") } |
+            Select-Object -First 1
+        if ($NestedRoot) {
+            $ExtractedRoot = $NestedRoot.FullName
+        }
     }
-    
-    Copy-Item "$($ExtractedDir.FullName)\open-dictate.exe" "$BinDir\" -Force
+
+    $ExtractedExe = Join-Path $ExtractedRoot "open-dictate.exe"
+    if (-not (Test-Path $ExtractedExe)) {
+        Write-Error "Downloaded release did not contain open-dictate.exe"
+        exit 1
+    }
+
+    Copy-Item $ExtractedExe "$BinDir\" -Force
     Write-Success "Installed open-dictate.exe"
     
-    if (Test-Path "$($ExtractedDir.FullName)\bin") {
-        Copy-Item "$($ExtractedDir.FullName)\bin\*" "$BinDir\" -Force
+    $ExtractedBinDir = Join-Path $ExtractedRoot "bin"
+    if (Test-Path $ExtractedBinDir) {
+        Copy-Item (Join-Path $ExtractedBinDir "*") "$BinDir\" -Force
         Write-Success "Installed whisper-cli and dependencies"
     }
     
