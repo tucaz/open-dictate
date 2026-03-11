@@ -46,42 +46,35 @@ if __name__ == "__main__":
 
 
 def create_icon():
-    """Create icon.ico from logo.png if available."""
+    """Create icon.ico from logo.png."""
     from PIL import Image
     
-    # Look for logo in various locations
+    # Look for logo in docs folder
     logo_paths = [
-        Path("website/logo.png"),
-        Path("assets/logo.png"),
-        Path("../website/logo.png"),
-        Path("../assets/logo.png"),
+        Path("docs/logo.png"),
+        Path("../docs/logo.png"),
     ]
     
     for logo_path in logo_paths:
         if logo_path.exists():
-            try:
-                img = Image.open(logo_path)
-                # Convert to RGBA if needed
-                if img.mode != 'RGBA':
-                    img = img.convert('RGBA')
-                
-                # Create multiple sizes for the icon
-                sizes = [16, 32, 48, 64, 128, 256]
-                icons = []
-                for size in sizes:
-                    resized = img.resize((size, size), Image.Resampling.LANCZOS)
-                    icons.append(resized)
-                
-                # Save as ICO
-                icons[0].save("icon.ico", format='ICO', sizes=[(s, s) for s in sizes])
-                print("Created icon.ico from logo.png")
-                return True
-            except Exception as e:
-                print(f"Warning: Could not create icon: {e}")
-                return False
+            img = Image.open(logo_path)
+            # Convert to RGBA if needed
+            if img.mode != 'RGBA':
+                img = img.convert('RGBA')
+            
+            # Create multiple sizes for the icon
+            sizes = [16, 32, 48, 64, 128, 256]
+            icons = []
+            for size in sizes:
+                resized = img.resize((size, size), Image.Resampling.LANCZOS)
+                icons.append(resized)
+            
+            # Save as ICO
+            icons[0].save("icon.ico", format='ICO', sizes=[(s, s) for s in sizes])
+            print("Created icon.ico from logo.png")
+            return True
     
-    print("Warning: logo.png not found, skipping icon creation")
-    return False
+    raise FileNotFoundError("logo.png not found in docs/ folder")
 
 
 def create_spec_file():
@@ -170,8 +163,9 @@ def build():
     # Clean previous builds
     clean_build_dirs()
     
-    # Create icon from logo if available
-    create_icon()
+    # Create icon from logo if icon.ico doesn't exist
+    if not os.path.exists("icon.ico"):
+        create_icon()
     
     # Create entry point and spec file
     create_entry_point()
