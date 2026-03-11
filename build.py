@@ -15,8 +15,8 @@ def clean_build_dirs():
             print(f"Removing {dir_name}/...")
             shutil.rmtree(dir_name)
     
-    # Remove spec file and temp files
-    for f in ["open-dictate.spec", "cli.py", "icon.ico"]:
+    # Remove spec file and temp files (preserve icon.ico - it's a source file)
+    for f in ["open-dictate.spec", "cli.py"]:
         if os.path.exists(f):
             os.remove(f)
 

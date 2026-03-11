@@ -38,7 +38,7 @@ function Get-Version {
     } catch {}
     
     # Try to get from version.py
-    $versionFile = "$PSScriptRoot\..\open_dictate\version.py"
+    $versionFile = "$PSScriptRoot\..\src\version.py"
     if (Test-Path $versionFile) {
         $content = Get-Content $versionFile -Raw
         # Match VERSION = "x.y.z" or VERSION = 'x.y.z'

@@ -1,5 +1,5 @@
 # open-dictate Version Reader
-# Reads the VERSION from open_dictate/version.py
+# Reads the VERSION from src/version.py
 #
 # Usage:
 #   .\scripts\read-version.ps1

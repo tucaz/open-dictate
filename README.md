@@ -150,6 +150,8 @@ For developers who want to build from source or modify the app.
 git clone https://github.com/tucaz/open-dictate.git
 cd open-dictate
 
+# Use Python 3.11 or 3.12
+
 # Install dependencies
 pip install -r requirements.txt
 

@@ -1,11 +1,11 @@
 # GitHub Actions Workflow for open-dictate Windows
 # 
 # This workflow triggers on push to the 'release' branch.
-# It reads the version from version.py, builds the release, creates a git tag,
+# It reads the version from src/version.py, builds the release, creates a git tag,
 # and publishes a GitHub Release with the built assets.
 #
 # Usage:
-#   1. Edit open_dictate/version.py to set your desired version
+#   1. Edit src/version.py to set your desired version
 #   2. Commit and push to main
 #   3. Merge main into release branch and push
 #   4. This workflow runs automatically
@@ -35,9 +35,11 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          # Pillow 10.2.0 does not install cleanly on Python 3.13 in this project.
+          # Build on the newest explicitly supported runtime instead.
+          python-version: '3.12'
       
-      # Read version from open_dictate/version.py
+      # Read version from src/version.py
       - name: Read version
         id: version
         shell: pwsh
