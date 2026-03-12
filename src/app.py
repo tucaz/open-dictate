@@ -1,7 +1,6 @@
 """Main application orchestrator."""
 
 import subprocess
-import sys
 import threading
 import time
 from pathlib import Path
@@ -10,6 +9,7 @@ from src.audio_recorder import AudioRecorder
 from src.config import Config
 from src.hotkey_manager import HotkeyManager
 from src.key_codes import KeyCodes
+from src.launcher import launch_tray_process
 from src.model_downloader import ModelDownloader
 from src.permissions import Permissions
 from src.recording_store import RecordingStore
@@ -34,6 +34,7 @@ class OpenDictateApp:
         self.is_pressed = False
         self.is_ready = False
         self.last_transcription: str = None
+        self._is_shutting_down = False
         
         # Set up tray handlers
         self.tray.reprocess_handler = self.reprocess
@@ -329,17 +330,21 @@ class OpenDictateApp:
     def restart(self) -> None:
         """Restart the application."""
         print("Restarting...")
-        
-        # Clean up
+
+        try:
+            launch_tray_process()
+        except OSError as e:
+            print(f"Restart failed: {e}")
+            return
+
         self.shutdown()
-        
-        # Restart with same arguments
-        import os
-        import sys
-        os.execv(sys.executable, [sys.executable, "-m", "open_dictate", "start"])
     
     def shutdown(self) -> None:
         """Clean up resources before exit."""
+        if self._is_shutting_down:
+            return
+
+        self._is_shutting_down = True
         print("Shutting down...")
         
         if self.hotkey_manager:
