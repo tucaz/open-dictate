@@ -50,9 +50,14 @@ if (-not $IsWindows -and $env:OS -ne "Windows_NT") {
     exit 1
 }
 
+# Config and model locations
+$ConfigDir = "$env:APPDATA\open-dictate"
+$ConfigFile = "$ConfigDir\config.json"
+$ModelsDir = "$ConfigDir\models"
+
 # Create directories
 $BinDir = "$InstallDir\bin"
-$dirs = @($InstallDir, "$InstallDir\models", $BinDir)
+$dirs = @($InstallDir, $BinDir, $ConfigDir, $ModelsDir)
 foreach ($dir in $dirs) {
     if (-not (Test-Path $dir)) {
         New-Item -ItemType Directory -Path $dir -Force | Out-Null
@@ -177,8 +182,14 @@ if ($IsLocalMode) {
 
 $ModelSize = "base.en"
 $ModelFile = "ggml-$ModelSize.bin"
-$ModelPath = "$InstallDir\models\$ModelFile"
+$ModelPath = "$ModelsDir\$ModelFile"
+$LegacyModelPath = "$InstallDir\models\$ModelFile"
 $ModelUrl = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/$ModelFile"
+
+if ((-not (Test-Path $ModelPath)) -and (Test-Path $LegacyModelPath)) {
+    Copy-Item $LegacyModelPath $ModelPath -Force
+    Write-Info "Copied existing model from legacy install location"
+}
 
 if (-not (Test-Path $ModelPath)) {
     Write-Info "Downloading default model ($ModelSize)..."
@@ -198,12 +209,6 @@ if (-not (Test-Path $ModelPath)) {
 # Create config
 # ============================================================================
 
-$ConfigDir = "$env:APPDATA\open-dictate"
-if (-not (Test-Path $ConfigDir)) {
-    New-Item -ItemType Directory -Path $ConfigDir -Force | Out-Null
-}
-
-$ConfigFile = "$ConfigDir\config.json"
 if (-not (Test-Path $ConfigFile)) {
     $defaultConfig = @{
         hotkey = @{

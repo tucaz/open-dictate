@@ -101,6 +101,7 @@ a = Analysis(
         'src.config',
         'src.hotkey_manager',
         'src.key_codes',
+        'src.launcher',
         'src.model_downloader',
         'src.permissions',
         'src.recording_store',

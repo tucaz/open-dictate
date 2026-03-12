@@ -2,9 +2,9 @@
 
 import sys
 
-from src.app import OpenDictateApp
 from src.config import Config
 from src.key_codes import KeyCodes
+from src.launcher import INTERNAL_TRAY_COMMAND, launch_tray_process
 from src.model_downloader import ModelDownloader
 from src.transcriber import Transcriber
 from src.version import VERSION
@@ -39,10 +39,21 @@ AVAILABLE MODELS:
 """)
 
 
-def cmd_start():
-    """Start the dictation daemon."""
+def cmd_run_tray():
+    """Run the tray app in-process."""
+    from src.app import OpenDictateApp
+
     app = OpenDictateApp()
     app.run()
+
+
+def cmd_start():
+    """Start the tray app as a detached background process."""
+    try:
+        launch_tray_process()
+    except OSError as e:
+        print(f"Error starting open-dictate: {e}", file=sys.stderr)
+        sys.exit(1)
 
 
 def cmd_set_hotkey(key_string: str):
@@ -125,7 +136,9 @@ def main():
     args = sys.argv[1:]
     command = args[0] if args else None
     
-    if command == "start":
+    if command == INTERNAL_TRAY_COMMAND:
+        cmd_run_tray()
+    elif command == "start":
         cmd_start()
     elif command == "set-hotkey":
         if len(args) < 2:
