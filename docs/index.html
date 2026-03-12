@@ -126,7 +126,7 @@
             <pre class="install-command"><code id="install-command">powershell -ExecutionPolicy Bypass -Command "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/tucaz/open-dictate/main/scripts/install.ps1'))"</code></pre>
           </div>
 
-          <p class="panel-run-label">After installation, start it with:</p>
+          <p class="panel-run-label">After installation, start it in the background with:</p>
           <pre class="install-run install-run-hero"><code>open-dictate start</code></pre>
         </aside>
       </section>
@@ -144,7 +144,7 @@
             <ol>
               <li>Download <code>open-dictate-windows-vX.X.X.zip</code></li>
               <li>Extract it to any folder or removable drive</li>
-              <li>Run <code>open-dictate.exe start</code></li>
+              <li>Run <code>open-dictate.exe start</code> and let it return to the prompt</li>
             </ol>
             <p class="install-foot">Useful for testing, temporary setups, or portable use.</p>
           </article>
@@ -385,5 +385,7 @@ open-dictate set-model base
   </div>
 
   <script src="script.js"></script>
+  <!-- 100% privacy-first analytics -->
+  <script data-collect-dnt="true" async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
 </body>
 </html>
