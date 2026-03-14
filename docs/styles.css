@@ -440,6 +440,13 @@ h1 {
   margin-bottom: 26px;
 }
 
+.section-intro {
+  margin: 14px 0 0;
+  max-width: 62ch;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .subsection-heading {
   margin: 26px 0 16px;
   max-width: 680px;
@@ -483,6 +490,7 @@ h2 {
 .config-card,
 .faq-item {
   padding: 22px;
+  min-width: 0;
 }
 
 .step-index {
@@ -492,10 +500,21 @@ h2 {
   font-family: "IBM Plex Mono", Consolas, monospace;
 }
 
+.install-options {
+  display: grid;
+  gap: 16px;
+}
+
 .install-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 16px;
+  align-items: start;
+}
+
+.install-panel {
+  margin-bottom: 0;
+  box-shadow: none;
 }
 
 #install .detail-grid {
@@ -563,6 +582,9 @@ h2 {
   background: #10243b;
   color: #edf7ff;
   overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .install-run-hero {

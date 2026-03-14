@@ -9,7 +9,8 @@ open-dictate is a lightweight Windows app that provides push-to-talk voice dicta
 - **Price**: Free and open source
 - **Platform**: Windows 10 and Windows 11
 - **Privacy**: Local transcription on your machine. Audio recordings are only kept if `maxRecordings` is configured above `0`
-- **Install (script)**: `powershell -ExecutionPolicy Bypass -Command "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/tucaz/open-dictate/main/scripts/install.ps1'))"`
+- **Install (recommended)**: `powershell -ExecutionPolicy Bypass -Command "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/tucaz/open-dictate/main/scripts/install.ps1'))"`
+- **Install (manual ZIP)**: Download `open-dictate-windows-vX.X.X.zip`, extract it, then run `install.ps1` from the extracted folder
 - **Install (portable)**: Download `open-dictate-windows-vX.X.X.zip`, extract it, then run `open-dictate.exe start`
 - **Default start command**: `open-dictate start`
 - **Source**: https://github.com/tucaz/open-dictate
@@ -27,7 +28,7 @@ open-dictate is a lightweight Windows app that provides push-to-talk voice dicta
 - Configurable hotkey, language, model size, spoken punctuation, and recording retention
 - Multiple Whisper model sizes: `tiny.en`, `tiny`, `base.en`, `base`, `small.en`, `small`, `medium.en`, `medium`, `large`
 - Multilingual support with Whisper language codes such as `pt`, `es`, `fr`, `de`, and `ja`
-- Portable ZIP option or one-command PowerShell installer
+- Recommended PowerShell installer plus portable and manual ZIP paths
 - Windows rewrite of the original Swift/macOS project
 
 ## Configuration
