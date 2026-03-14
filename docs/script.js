@@ -2,7 +2,7 @@
   var assetNamePattern = /^(open-dictate)-windows-v.+\.zip$/i;
   var releasesUrl = "https://github.com/tucaz/open-dictate/releases";
   var apiUrl = "https://api.github.com/repos/tucaz/open-dictate/releases/latest";
-  var downloadLink = document.getElementById("download-link");
+  var zipLinks = document.querySelectorAll(".zip-release-link");
   var releaseNote = document.getElementById("release-note");
   var copyButton = document.getElementById("copy-install");
   var installCommand = document.getElementById("install-command");
@@ -13,9 +13,9 @@
     }
   }
 
-  if (downloadLink) {
-    downloadLink.href = releasesUrl;
-  }
+  zipLinks.forEach(function (link) {
+    link.href = releasesUrl;
+  });
 
   if (copyButton && installCommand && navigator.clipboard) {
     copyButton.addEventListener("click", function () {
@@ -46,17 +46,19 @@
           })
         : null;
 
-      if (asset && downloadLink) {
-        downloadLink.href = asset.browser_download_url;
+      if (asset) {
+        zipLinks.forEach(function (link) {
+          link.href = asset.browser_download_url;
+        });
       }
 
       if (release && release.tag_name) {
-        setReleaseText("Latest release: " + release.tag_name);
+        setReleaseText("Latest ZIP release: " + release.tag_name);
       } else {
-        setReleaseText("Latest release available on GitHub Releases.");
+        setReleaseText("Latest ZIP release available on GitHub Releases.");
       }
     })
     .catch(function () {
-      setReleaseText("Could not resolve the latest release automatically. Using GitHub Releases.");
+      setReleaseText("Could not resolve the latest ZIP release automatically. Using GitHub Releases.");
     });
 })();

@@ -70,18 +70,15 @@
               <div class="cta-row">
                 <a
                   class="button button-primary"
-                  id="download-link"
-                  href="https://github.com/tucaz/open-dictate/releases"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="#install"
                 >
-                  Download for Windows
+                  Install with PowerShell
                 </a>
-                <a class="button button-secondary" href="#install">Or use portable mode</a>
+                <a class="button button-secondary" href="#install">See portable and ZIP options</a>
               </div>
 
               <p class="release-note" id="release-note">
-                Latest release link loads automatically. Fallback: GitHub Releases.
+                Latest ZIP release link loads automatically for portable and manual install. Fallback: GitHub Releases.
               </p>
             </div>
 
@@ -107,47 +104,64 @@
 
         </div>
 
-        <aside class="hero-panel" id="quick-install" aria-label="Quick install">
-          <div class="panel-top">
-            <div>
-              <p class="panel-kicker">Install in PowerShell</p>
-              <p class="panel-title">One command. Local setup. Done.</p>
-            </div>
-            <button class="copy-button" id="copy-install" type="button">Copy command</button>
-          </div>
-
-          <div class="terminal-card">
-            <div class="terminal-bar">
-              <span></span>
-              <span></span>
-              <span></span>
-              <p>PowerShell</p>
-            </div>
-            <pre class="install-command"><code id="install-command">powershell -ExecutionPolicy Bypass -Command "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/tucaz/open-dictate/main/scripts/install.ps1'))"</code></pre>
-          </div>
-
-          <p class="panel-run-label">After installation, start it in the background with:</p>
-          <pre class="install-run install-run-hero"><code>open-dictate start</code></pre>
-        </aside>
       </section>
 
       <section class="section section-accent" id="install">
         <div class="section-heading">
           <p class="eyebrow">Install</p>
-          <h2>Portable mode.</h2>
+          <h2>Three ways to get started.</h2>
+          <p class="section-intro">
+            Start with the PowerShell installer for the normal setup, or use the ZIP options below for portable and manual installs.
+          </p>
         </div>
 
-        <div class="install-grid">
-          <article class="install-card">
-            <h3>Portable: download and unzip</h3>
-            <p>If you do not want to run the install script, download the ZIP release and extract it anywhere.</p>
-            <ol>
-              <li>Download <code>open-dictate-windows-vX.X.X.zip</code></li>
-              <li>Extract it to any folder or removable drive</li>
-              <li>Run <code>open-dictate.exe start</code> and let it return to the prompt</li>
-            </ol>
-            <p class="install-foot">Useful for testing, temporary setups, or portable use.</p>
-          </article>
+        <div class="install-options">
+          <aside class="hero-panel install-panel" id="quick-install" aria-label="Quick install">
+            <div class="panel-top">
+              <div>
+                <p class="panel-kicker">Recommended first</p>
+                <p class="panel-title">Install with PowerShell</p>
+              </div>
+              <button class="copy-button" id="copy-install" type="button">Copy command</button>
+            </div>
+
+            <div class="terminal-card">
+              <div class="terminal-bar">
+                <span></span>
+                <span></span>
+                <span></span>
+                <p>PowerShell</p>
+              </div>
+              <pre class="install-command"><code id="install-command">powershell -ExecutionPolicy Bypass -Command "Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/tucaz/open-dictate/main/scripts/install.ps1'))"</code></pre>
+            </div>
+
+            <p class="panel-run-label">After installation, start it in the background with:</p>
+            <pre class="install-run install-run-hero"><code>open-dictate start</code></pre>
+          </aside>
+
+          <div class="install-grid">
+            <article class="install-card">
+              <h3>Portable: download and run</h3>
+              <p>Best for testing, temporary setups, or carrying it on a removable drive. This does not add PATH or create Start Menu shortcuts.</p>
+              <ol>
+                <li><a class="zip-release-link" href="https://github.com/tucaz/open-dictate/releases" target="_blank" rel="noreferrer">Download the latest ZIP release</a></li>
+                <li>Extract it to any folder or removable drive</li>
+                <li>Run <code>open-dictate.exe start</code> and let it return to the prompt</li>
+              </ol>
+              <p class="install-foot">Use this when you want no installation step.</p>
+            </article>
+
+            <article class="install-card">
+              <h3>Manual install from the ZIP</h3>
+              <p>Best if you want the release package on disk first, but still want the installed setup with PATH and shortcuts.</p>
+              <ol>
+                <li><a class="zip-release-link" href="https://github.com/tucaz/open-dictate/releases" target="_blank" rel="noreferrer">Download the latest ZIP release</a></li>
+                <li>Extract the ZIP to a local folder</li>
+                <li>Run <code>install.ps1</code> from the extracted folder in PowerShell</li>
+              </ol>
+              <p class="install-foot">Use this when you want the bundled installer from the release ZIP instead of the remote one-liner.</p>
+            </article>
+          </div>
         </div>
 
         <div class="detail-grid">
