@@ -103,8 +103,8 @@ if ($IsLocalMode) {
             $Version = $release.tag_name -replace '^v', ''
             Write-Info "Latest version: $Version"
         } catch {
-            Write-Warning "Could not determine latest version, using 0.1.0"
-            $Version = "0.1.0"
+            Write-Warning "Could not determine latest version, using 0.0.2"
+            $Version = "0.0.2"
         }
     }
     
