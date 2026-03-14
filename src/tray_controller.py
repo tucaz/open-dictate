@@ -43,6 +43,8 @@ class TrayController:
         self._animation_thread: Optional[threading.Thread] = None
         self._stop_animation = threading.Event()
         self._download_progress: Optional[str] = None
+        self._status_text: Optional[str] = None
+        self._availability_detail: Optional[str] = None
         self._copied_feedback = False
         self._menu_actions: List[Callable] = []
         
@@ -91,6 +93,31 @@ class TrayController:
         """Update the download progress text."""
         self._download_progress = text
         self._build_menu()
+
+    def set_status_text(self, text: Optional[str]) -> None:
+        """Override the status text shown in the tray menu."""
+        self._status_text = text
+        self._build_menu()
+
+    def set_availability_detail(self, text: Optional[str]) -> None:
+        """Show extra readiness detail in the tray menu."""
+        self._availability_detail = text
+        self._build_menu()
+
+    def show_notification(self, message: str, title: Optional[str] = None) -> None:
+        """Display a tray notification when supported."""
+        if not message or not self.icon.HAS_NOTIFICATION:
+            return
+
+        try:
+            self.icon.remove_notification()
+        except Exception:
+            pass
+
+        try:
+            self.icon.notify(message, title)
+        except Exception:
+            pass
     
     def _build_menu(self) -> None:
         """Build the context menu."""
@@ -121,8 +148,16 @@ class TrayController:
             items.append(pystray.MenuItem(self._download_progress, None, enabled=False))
             items.append(pystray.Menu.SEPARATOR)
         
+        status_text = self._status_text or state_texts[self._state]
+
         items.extend([
-            pystray.MenuItem(state_texts[self._state], None, enabled=False),
+            pystray.MenuItem(status_text, None, enabled=False),
+        ])
+
+        if self._availability_detail:
+            items.append(pystray.MenuItem(self._availability_detail, None, enabled=False))
+
+        items.extend([
             pystray.Menu.SEPARATOR,
             pystray.MenuItem(f"Hotkey: {hotkey_desc}", None, enabled=False),
             pystray.MenuItem(f"Model: {config.model_size}", None, enabled=False),
@@ -168,6 +203,11 @@ class TrayController:
         ])
         
         self.icon.menu = pystray.Menu(*items)
+
+        try:
+            self.icon.update_menu()
+        except Exception:
+            pass
     
     def _on_copy_last(self) -> None:
         """Handle copy last dictation menu item."""

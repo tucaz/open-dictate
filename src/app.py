@@ -35,6 +35,7 @@ class OpenDictateApp:
         self.is_ready = False
         self.last_transcription: str = None
         self._is_shutting_down = False
+        self._blocked_notification_message: str | None = None
         
         # Set up tray handlers
         self.tray.reprocess_handler = self.reprocess
@@ -62,12 +63,19 @@ class OpenDictateApp:
             self._setup_inner()
         except Exception as e:
             print(f"Fatal setup error: {e}")
-            self.tray.set_state(State.WAITING_FOR_PERMISSION)
+            self._set_blocked_state(
+                state=State.WAITING_FOR_PERMISSION,
+                status_text="Startup failed",
+                detail="Open-dictate could not finish startup.",
+                notification_message="Open-dictate is not ready yet because startup failed.",
+            )
     
     def _setup_inner(self) -> None:
         """Internal setup logic."""
         # Load configuration
         self.config = Config.load()
+
+        self._start_hotkey_listener()
         
         # Clean up recordings if in privacy mode
         if Config.effective_max_recordings(self.config.max_recordings) == 0:
@@ -85,15 +93,36 @@ class OpenDictateApp:
         if not Transcriber.find_whisper_binary():
             print("Error: whisper-cli not found")
             print("Please install whisper.cpp or place whisper-cli.exe in PATH")
-            self.tray.set_state(State.WAITING_FOR_PERMISSION)
+            self._set_blocked_state(
+                state=State.WAITING_FOR_PERMISSION,
+                status_text="whisper-cli not found",
+                detail="Hotkey unavailable until whisper-cli is installed.",
+                notification_message="Open-dictate is not ready yet because whisper-cli is missing.",
+            )
             return
         
         # Check microphone permission
-        Permissions.ensure_microphone()
-        
+        try:
+            Permissions.ensure_microphone()
+        except SystemExit:
+            self._set_blocked_state(
+                state=State.WAITING_FOR_PERMISSION,
+                status_text="Microphone unavailable",
+                detail="Hotkey unavailable until microphone access is granted.",
+                notification_message="Open-dictate is not ready yet because microphone access is unavailable.",
+            )
+            return
+
         # Download model if needed
         if not Transcriber.model_exists(self.config.model_size):
-            self.tray.set_state(State.DOWNLOADING)
+            self._set_blocked_state(
+                state=State.DOWNLOADING,
+                status_text="Downloading model...",
+                detail=f"Hotkey unavailable until {self.config.model_size} finishes downloading.",
+                notification_message=(
+                    f"Open-dictate is still downloading the {self.config.model_size} model."
+                ),
+            )
             self.tray.update_download_progress(f"Downloading {self.config.model_size} model...")
             print(f"Downloading {self.config.model_size} model...")
             
@@ -102,14 +131,23 @@ class OpenDictateApp:
                 self.tray.update_download_progress(None)
             except Exception as e:
                 print(f"Failed to download model: {e}")
-                self.tray.set_state(State.WAITING_FOR_PERMISSION)
+                self._set_blocked_state(
+                    state=State.WAITING_FOR_PERMISSION,
+                    status_text="Model download failed",
+                    detail=f"Hotkey unavailable until {self.config.model_size} is installed.",
+                    notification_message=(
+                        f"Open-dictate is not ready because the {self.config.model_size} model download failed."
+                    ),
+                )
                 return
         
-        # Start hotkey listener on main thread
-        self._start_listening()
+        self._mark_ready()
     
-    def _start_listening(self) -> None:
-        """Start the hotkey listener."""
+    def _start_hotkey_listener(self) -> None:
+        """Start the hotkey listener if it is not already running."""
+        if self.hotkey_manager:
+            return
+
         self.hotkey_manager = HotkeyManager(
             key_code=self.config.hotkey.key_code,
             modifiers=self.config.hotkey.modifiers
@@ -119,8 +157,28 @@ class OpenDictateApp:
             on_key_down=self.handle_key_down,
             on_key_up=self.handle_key_up
         )
-        
+
+    def _set_blocked_state(
+        self,
+        state: State,
+        status_text: str,
+        detail: str,
+        notification_message: str,
+    ) -> None:
+        """Mark the app as blocked and explain why in the tray."""
+        self.is_ready = False
+        self._blocked_notification_message = notification_message
+        self.tray.set_status_text(status_text)
+        self.tray.set_availability_detail(detail)
+        self.tray.set_state(state)
+
+    def _mark_ready(self) -> None:
+        """Clear startup blocks and allow dictation."""
         self.is_ready = True
+        self._blocked_notification_message = None
+        self.tray.set_status_text(None)
+        self.tray.set_availability_detail(None)
+        self.tray.update_download_progress(None)
         self.tray.set_state(State.IDLE)
         
         hotkey_desc = KeyCodes.describe(
@@ -190,7 +248,12 @@ class OpenDictateApp:
     
     def handle_key_down(self) -> None:
         """Handle hotkey press - start recording."""
-        if not self.is_ready or self.is_pressed:
+        if self.is_pressed:
+            return
+
+        if not self.is_ready:
+            if self._blocked_notification_message:
+                self.tray.show_notification(self._blocked_notification_message, "open-dictate")
             return
         
         self.is_pressed = True
